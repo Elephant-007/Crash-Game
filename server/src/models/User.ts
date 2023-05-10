@@ -6,7 +6,7 @@ export interface User {
   balance: string;
   avatarUrl?: string;
 }
-const UserSchema = new Schema({
+const ModelSchema = new Schema({
   address: {
     type: String,
     required: true,
@@ -25,5 +25,5 @@ const UserSchema = new Schema({
   },
 });
 
-const UserModel = model("User", UserSchema);
-export default UserModel;
+const Model = model("User", ModelSchema);
+export default Model;

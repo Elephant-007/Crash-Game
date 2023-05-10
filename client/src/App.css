@@ -1,0 +1,12 @@
+.m-rounded {
+  @apply border border-border rounded-2xl;
+}
+.anim {
+  @apply transition-colors duration-300;
+}
+
+/* @media only screen and (max-width: 500px) {
+  #modalAuth {
+    width: 100%;
+  }
+} */
