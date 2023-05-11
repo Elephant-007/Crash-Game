@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { shortenName } from "../config/util";
-import { constStates } from "../config/const";
+import { shortenName } from "app/utils/util";
+import { constStates } from "app/config/const";
 
 const UserTable = () => {
   const gameState = useSelector((state: any) => state.crash.gameState);

@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
-import { constStates } from "../config/const";
+import { constStates } from "app/config/const";
 
 const usePrevious = (value: any) => {
   const ref = useRef();

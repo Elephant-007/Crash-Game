@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { socketEvents } from "../socket/socket";
+import { socketEvents } from "../providers/socket";
 
 const initialState = {
   address: "",
@@ -14,7 +14,6 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     setAuth: (state, action: any) => {
-      console.log(action.payload);
       state.address = action.payload.address;
       state.token = action.payload.token;
       state.balance = action.payload.balance;
