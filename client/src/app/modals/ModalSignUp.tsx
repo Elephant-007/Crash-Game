@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import Modal from "react-modal";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setSignUp, setWalletConnect } from "app/store/modal.slice";
 import { useGetAccountInfo, useGetIsLoggedIn } from "app/hooks/sdkDappHooks";
@@ -7,8 +8,12 @@ import Iconify from "app/components/Iconify";
 import { logout } from "app/hooks/sdkDappHooks";
 import { initAvatar } from "app/config/const";
 import { ToastrContext } from "app/providers/ToastrProvider";
+import axios from "app/components/axios";
+import { setAuth } from "app/store/auth.slice";
 Modal.setAppElement("body");
 const ModalSignUp = () => {
+  const [agree, setAgree] = useState(false);
+  const [error, setError] = useState("");
   const [avatar, setAvatar] = useState(initAvatar);
   const [name, setName] = useState("");
   const notify = useContext(ToastrContext);
@@ -16,10 +21,48 @@ const ModalSignUp = () => {
   const isLogin: any = useGetIsLoggedIn();
   const isOpen: any = useSelector((state: any) => state.modal.signUp);
   const account: any = useGetAccountInfo();
-  const handleSignUp = () => {
-    if (!account.address) return notify.error("Please connect your wallet!");
-    if (!name) return notify.error("Username required!");
+  useEffect(() => {
+    if (name && error === "name") setError("");
+    if (agree && error === "agree") setError("");
+    return () => {};
+  }, [name, agree]);
+
+  const handleSignUp = async () => {
+    if (!account.address) {
+      setError("wallet");
+      return notify.error("Please connect your wallet!");
+    }
+    if (!name) {
+      setError("name");
+      return notify.error("Username required!");
+    }
+    if (!agree) {
+      setError("agree");
+      return notify.error("Please agree to the Terms and Conditions!");
+    }
     if (!avatar) return notify.error("Please select your Avatar!");
+    try {
+      const result = await axios.post("/auth/register", {
+        address: account.address,
+        name,
+        avatar,
+      });
+      if (result && result.status === 200) {
+        dispatch(setAuth(result.data));
+        notify.success("Sign Up Successfully!");
+        notify.success("Login Successfully!");
+        dispatch(setSignUp(false));
+        setName("");
+        setAgree(false);
+        setError("");
+        setAvatar(initAvatar);
+      }
+    } catch (errors: any) {
+      console.log(errors);
+      if (errors.response.status === 400)
+        notify.error(errors.response.data.errors[0].msg);
+      else notify.error("Server Error!");
+    }
   };
   return (
     <Modal
@@ -31,6 +74,10 @@ const ModalSignUp = () => {
           logout();
           notify.warning("Wallet Disconnected");
         }
+        setName("");
+        setAgree(false);
+        setError("");
+        setAvatar(initAvatar);
       }}
       className="modal-fade modal-content text-sm md:text-base"
       overlayClassName="bg-[rgba(14,18,36,.7)] fixed w-full h-full top-0 left-0 backdrop-blur-xl z-50"
@@ -48,6 +95,10 @@ const ModalSignUp = () => {
               logout();
               notify.warning("Wallet Disconnected");
             }
+            setName("");
+            setAgree(false);
+            setError("");
+            setAvatar(initAvatar);
           }}
           className="text-3xl hover:text-white anim cursor-pointer"
         >
@@ -74,7 +125,9 @@ const ModalSignUp = () => {
           </div>
         ) : (
           <button
-            className="w-full mt-4 md:mt-6 bg-card p-2.5 md:p-3 rounded-md hover:bg-border anim hover:text-bright"
+            className={`w-full mt-4 md:mt-6 bg-card p-2.5 md:p-3 rounded-md hover:bg-border anim hover:text-bright ${
+              error === "wallet" && "border border-tomato"
+            }`}
             onClick={() => {
               dispatch(setWalletConnect(true));
             }}
@@ -87,7 +140,9 @@ const ModalSignUp = () => {
           onChange={(e: any) => {
             setName(e.target.value);
           }}
-          className="mt-5 p-2.5 md:p-3 rounded-md bg-transparent outline-none text-bright border-border border w-full placeholder:text-secondary focus:border-indigo anim"
+          className={`mt-5 p-2.5 md:p-3 rounded-md bg-transparent outline-none text-bright border-border border w-full placeholder:text-secondary focus:border-indigo anim ${
+            error === "name" && "border-tomato"
+          }`}
           placeholder="Username"
         ></input>
         <div className="mt-5 flex items-center justify-center">
@@ -102,15 +157,37 @@ const ModalSignUp = () => {
           </div>
         </div>
 
-        <div className="mt-4 text-xs md:text-sm">
-          I agree to the{" "}
-          <a
-            className="text-indigo hover:text-indigoBright font-semibold"
-            href="#"
+        <div className="mt-4 text-xs md:text-sm flex items-start gap-2 md:gap-3">
+          <div
+            className={`flex items-center cursor-pointer ${
+              error === "agree" ? "text-tomato" : "text-indigo"
+            }`}
+            onClick={() => {
+              setAgree(!agree);
+            }}
           >
-            Terms and conditions
-          </a>{" "}
-          & confirm I am at least 18 years old
+            {agree ? (
+              <Iconify
+                icon={"mdi:shield-check"}
+                className={"w-5 h-5"}
+              ></Iconify>
+            ) : (
+              <Iconify
+                icon={"mdi:shield-outline"}
+                className={"w-5 h-5"}
+              ></Iconify>
+            )}
+          </div>
+          <div>
+            I agree to the{" "}
+            <a
+              className="text-indigo hover:text-indigoBright font-semibold"
+              href="#"
+            >
+              Terms and conditions
+            </a>{" "}
+            & confirm I am at least 18 years old
+          </div>
         </div>
         <button
           onClick={handleSignUp}

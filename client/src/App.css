@@ -1,3 +1,26 @@
+::-webkit-scrollbar {
+  cursor: pointer;
+  width: 2px;
+  height: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  cursor: pointer;
+  background: #3b415c;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  cursor: pointer;
+  background: #4b308b;
+  border-radius: 2px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #613ce5;
+}
 .m-rounded {
   @apply border border-border md:rounded-2xl rounded-lg;
 }
@@ -22,6 +45,46 @@
 }
 .modal-fade {
   animation: fadeIn 0.3s;
+}
+
+@keyframes sidebar-in {
+  from {
+    opacity: 0;
+    left: -100%;
+  }
+  to {
+    opacity: 1;
+    left: 0;
+  }
+}
+.anim-in-sidebar {
+  animation: sidebar-in 0.3s;
+}
+@keyframes sidebar-out {
+  from {
+    opacity: 1;
+    left: 0;
+  }
+  to {
+    opacity: 0;
+    left: -100%;
+  }
+}
+.anim-out-sidebar {
+  animation: sidebar-out 0.3s;
+}
+@keyframes dropdown {
+  from {
+    opacity: 0;
+    scale: 80%;
+  }
+  to {
+    opacity: 1;
+    scale: 100%;
+  }
+}
+.anim-dropdown {
+  animation: dropdown 0.3s;
 }
 .modal-content {
   border-radius: 8px;

@@ -11,7 +11,10 @@ const authController = {
     try {
       const { address } = req.body;
       let user = await UserModel.findOne({ address });
-      if (!user) return res.status(400).send({ error: "User does not exist." });
+      if (!user)
+        return res
+          .status(400)
+          .send({ errors: [{ msg: "User does not exist." }] });
       const payload = {
         user: {
           address: user.address,
@@ -32,25 +35,21 @@ const authController = {
       return res.status(400).send({ errors: errors.array() });
     }
     try {
-      const { address, name } = req.body;
-      let user = await UserModel.findOne({ address });
+      const { address, name, avatar } = req.body;
+      let user = await UserModel.findOne({ address: address });
       if (user) {
         return res
           .status(400)
           .send({ errors: [{ msg: "Wallet Address already exists." }] });
       }
-      const avatarUrl = "get from metadata";
-      user = new UserModel({
-        name,
-        address,
-        balance: 0,
-        avatarUrl,
-      });
+      user = new UserModel({ address, name, avatar });
 
       await user.save();
       const payload = {
         user: {
           adddress: user.address,
+          name: user.name,
+          role: user.role,
         },
       };
       jwt.sign(payload, environment.secretKey, (err, token) => {
@@ -73,6 +72,7 @@ export const authValidation = {
   register: [
     check("address", "Connect your wallet").not().isEmpty(),
     check("name", "Name is required").not().isEmpty(),
+    check("avatar", "Avatar is required").not().isEmpty(),
   ],
 };
 export default authController;

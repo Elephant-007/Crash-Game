@@ -25,7 +25,7 @@ const io = new SocketIO.Server(httpServer, {
   },
 }).of("/crash");
 socketProvider(io);
-app.use("/crash", router);
+app.use("/", router);
 connectDatabase();
 
 const port = environment.port || 5000;

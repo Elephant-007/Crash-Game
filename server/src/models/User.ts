@@ -17,12 +17,25 @@ const ModelSchema = new Schema({
     required: true,
   },
   balance: {
-    type: Number,
-    default: 0,
+    btc: { type: Number, default: 0 },
+    eth: { type: Number, default: 0 },
+    ltc: { type: Number, default: 0 },
+    egld: { type: Number, default: 0 },
+    kas: { type: Number, default: 0 },
+    erg: { type: Number, default: 0 },
+    xrp: { type: Number, default: 0 },
+    bnb: { type: Number, default: 0 },
+    usdc: { type: Number, default: 0 },
+    usdt: { type: Number, default: 0 },
+    matic: { type: Number, default: 0 },
+    ada: { type: Number, default: 0 },
+    sol: { type: Number, default: 0 },
+    ebone: { type: Number, default: 0 },
   },
-  avatarUrl: {
+  avatar: {
     type: String,
   },
+  role: { type: String, default: "user" },
 });
 
 const Model = model("User", ModelSchema);
