@@ -3,7 +3,7 @@ import authController, { authValidation } from "../controllers/auth.controller";
 
 const router = express.Router();
 router.post("/auth/login", authValidation.login, authController.login); // address
-router.post("/auth/register", authValidation.register, authController.register); //  address name,avatar
+router.post("/auth/register", authValidation.register, authController.register); //  address, name, avatar
 router.get("/auth/users", authController.users);
 
 export default router;

@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { constStates } from "app/config/const";
+import { coinSVG, constStates } from "app/config/const";
 import { socketEvents } from "app/providers/socket";
 import NumberInput from "app/components/NumberInput";
 import Iconify from "app/components/Iconify";
+import Main from ".";
 
 const Action = () => {
-  const fixedBetAmount = 6;
-  const minBetAmount = Number(0.00001);
+  const fixedBetAmount = 8;
+  const minBetAmount = Number(0.00000001);
   const maxBetAmount = 100;
-  const [betAmount, setBetAmount] = useState(0.00001);
-  const [autoCash, setAutoCash] = useState(100.0);
+
+  const [betAmount, setBetAmount] = useState((0.00000001).toFixed(8));
+  const [autoCash, setAutoCash] = useState((1.01).toFixed(2));
   const gameState = useSelector((state: any) => state.crash.gameState);
   const auth = useSelector((state: any) => state.auth);
   const players = useSelector((state: any) => state.crash.playerState);
@@ -21,26 +23,50 @@ const Action = () => {
   const promise = waitings.find((player: any) => {
     return player.address === auth.address;
   });
-
+  const chain = useSelector((state: any) => state.modal.chain);
+  const MainCoin = coinSVG[chain];
   return (
     <div>
       <div className="flex flex-col mt-4 gap-3 ">
         <div className="flex gap-1">
           <div className="relative w-full">
+            <MainCoin className="w-6 h-6 absolute left-2 top-2" />
             <NumberInput
-              onChange={(e: number) => {
+              onChange={(e: any) => {
                 setBetAmount(e);
               }}
+              onBlur={() => {
+                const filterValue: any = Math.min(
+                  Math.max(Number(betAmount), Number(minBetAmount)),
+                  Number(maxBetAmount)
+                );
+                setBetAmount(filterValue.toFixed(fixedBetAmount));
+              }}
               min={minBetAmount}
-              max={100}
+              max={maxBetAmount}
               value={betAmount}
-              className="w-full bg-back py-3 md:py-4 px-4 m-rounded text-[white] transition duration-300 outline-none"
+              fixed={fixedBetAmount}
+              className="w-full bg-back py-3 md:py-4 pr-4 pl-10 m-rounded text-[white] transition duration-300 outline-none"
             ></NumberInput>
           </div>
-          <button className="bg-card w-10 md:w-14 outline-none md:rounded-2xl rounded-lg flex-none anim hover:bg-border">
+          <button
+            onClick={() => {
+              setBetAmount(
+                Math.min(Number(betAmount) * 2, maxBetAmount).toFixed(8)
+              );
+            }}
+            className="bg-card w-10 md:w-14 outline-none md:rounded-2xl rounded-lg flex-none anim hover:bg-border"
+          >
             x2
           </button>
-          <button className="bg-card w-10 md:w-14 outline-none md:rounded-2xl rounded-lg flex-none anim hover:bg-border">
+          <button
+            onClick={() => {
+              setBetAmount(
+                Math.max(Number(betAmount) / 2, minBetAmount).toFixed(8)
+              );
+            }}
+            className="bg-card w-10 md:w-14 outline-none md:rounded-2xl rounded-lg flex-none anim hover:bg-border"
+          >
             1/2
           </button>
           <button className="border border-border w-10 md:w-14 outline-none md:rounded-2xl rounded-lg flex-none hover:bg-card anim">
@@ -50,12 +76,16 @@ const Action = () => {
         <div className="flex gap-1">
           <div className="relative w-full">
             <NumberInput
-              onChange={(e: number) => {
-                setBetAmount(e);
+              onChange={(e: any) => {
+                setAutoCash(e);
               }}
-              min={minBetAmount}
-              max={100}
-              value={betAmount}
+              onBlur={() => {
+                const filterValue: any = Math.max(Number(autoCash), 1.01);
+                setAutoCash(filterValue.toFixed(2));
+              }}
+              min={1.01}
+              value={autoCash}
+              fixed={2}
               className="w-full bg-back py-3 md:py-4 px-4 m-rounded text-[white] transition duration-300 outline-none"
             ></NumberInput>
           </div>
