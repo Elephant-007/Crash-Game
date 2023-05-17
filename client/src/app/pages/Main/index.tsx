@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Rocket from "./Rocket";
 import UserTable from "./UserTable";
 import Action from "./Action";
@@ -15,7 +15,7 @@ const tabs = [
 ];
 const Main = () => {
   const [tabActive, setTabActive] = useState("My Bet");
-
+  const rocketRef = useRef(null);
   return (
     <>
       <div className="flex text-secondary text-xs md:base">
@@ -25,8 +25,8 @@ const Main = () => {
           <div className="w-full relative md:px-12 px-4">
             <div className="lg:flex lg:gap-16">
               <div className="lg:w-[60%]">
-                <Rocket></Rocket>
-                <Action></Action>
+                <Rocket refer={rocketRef}></Rocket>
+                <Action target={rocketRef}></Action>
               </div>
               <div className="lg:w-[40%] mt-6 md:mt-0">
                 <UserTable></UserTable>

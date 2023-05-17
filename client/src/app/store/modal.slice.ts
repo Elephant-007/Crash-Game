@@ -6,6 +6,7 @@ const initialState = {
   walletConnect: false,
   menu: false,
   chain: "ebone",
+  screenshot: false,
 };
 
 export const slice = createSlice({
@@ -27,10 +28,19 @@ export const slice = createSlice({
     setChain: (state, action) => {
       state.chain = action.payload;
     },
+    setScreenshot: (state, action) => {
+      state.screenshot = action.payload;
+    },
   },
 });
 
-export const { setSignUp, setWalletConnect, setMenu, setLogin, setChain } =
-  slice.actions;
+export const {
+  setSignUp,
+  setWalletConnect,
+  setMenu,
+  setLogin,
+  setChain,
+  setScreenshot,
+} = slice.actions;
 
 export default slice.reducer;

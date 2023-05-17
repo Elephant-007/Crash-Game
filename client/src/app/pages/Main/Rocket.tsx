@@ -9,7 +9,7 @@ const usePrevious = (value: any) => {
   });
   return ref.current;
 };
-const Rocket = (props = {}) => {
+const Rocket = (props: any) => {
   const gameState = useSelector((state: any) => state.crash.gameState);
   const players = useSelector((state: any) => state.crash.playerState);
   const address = useSelector((state: any) => state.auth.address);
@@ -217,7 +217,7 @@ const Rocket = (props = {}) => {
   }, [gameState]);
 
   return (
-    <div className="rounded-3xl bg-card relative pt-5">
+    <div className="rounded-3xl bg-card relative pt-5" ref={props.refer}>
       <div>
         <img
           src="/images/shadow-board.png"

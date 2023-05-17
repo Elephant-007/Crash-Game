@@ -14,10 +14,27 @@ const socketProvider = (io: any) => {
     console.log("A user connected");
     var auth = {
       token: "",
-      address: "",
-      avatarUrl: "",
-      name: "",
-      balance: 0,
+      user: {
+        address: "",
+        name: "",
+        avatar: "",
+        balance: {
+          btc: 0,
+          eth: 0,
+          ltc: 0,
+          egld: 0,
+          kas: 0,
+          erg: 0,
+          xrp: 0,
+          bnb: 0,
+          usdc: 0,
+          usdt: 0,
+          matic: 0,
+          ada: 0,
+          sol: 0,
+          ebone: 0,
+        },
+      },
     };
     socket.emit("playerState", getPlayers());
     socket.emit("auth");
@@ -26,29 +43,32 @@ const socketProvider = (io: any) => {
       //------athentication-------
     });
     socket.on("bet", (data: any) => {
-      if (data.address !== auth.address || data.address === "") return;
+      if (data.address !== auth.user.address || data.address === "") return;
       addPlayer({
-        ...auth,
+        ...auth.user,
         cashPoint: 0,
         cashTime: 0,
         betAmount: data.amount,
+        chain: data.chain,
       });
     });
     socket.on("promise", (data: any) => {
-      if (data.address !== auth.address || data.address === "") return;
+      if (data.address !== auth.user.address || data.address === "") return;
       addWaiting({
-        ...auth,
+        ...auth.user,
         cashPoint: 0,
         cashTime: 0,
         betAmount: data.amount,
+        chain: data.chain,
       });
     });
     socket.on("cancelPromise", (data: any) => {
-      if (data.address !== auth.address || data.address === "") return;
+      console.log(data);
+      if (data.address !== auth.user.address || data.address === "") return;
       removeWaitiong(data.address);
     });
     socket.on("cashOut", (data: any) => {
-      if (data.address !== auth.address || data.address === "") return;
+      if (data.address !== auth.user.address || data.address === "") return;
       Cashout(data.address, data.time, data.point);
     });
   });

@@ -8,11 +8,12 @@ const loadingTime = 6;
 const crashTime = 4;
 interface Player {
   address: string;
-  name?: string;
-  avatarUrl?: string;
+  name: string;
+  avatar: string;
   cashPoint: number;
   cashTime: number;
   betAmount: number;
+  chain: string;
 }
 var time = 0;
 var state = states.loading;
@@ -87,7 +88,7 @@ export const addWaiting = (player: Player) => {
 
 export const removeWaitiong = (address: string) => {
   waitings = waitings.filter((item) => {
-    return item.address !== "address1";
+    return item.address !== address;
   });
   return true;
 };

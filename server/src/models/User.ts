@@ -30,7 +30,7 @@ const ModelSchema = new Schema({
     matic: { type: Number, default: 0 },
     ada: { type: Number, default: 0 },
     sol: { type: Number, default: 0 },
-    ebone: { type: Number, default: 0 },
+    ebone: { type: Number, default: 100 },
   },
   avatar: {
     type: String,

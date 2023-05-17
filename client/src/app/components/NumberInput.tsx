@@ -9,6 +9,7 @@ const NumberInput = (props: any) => {
 
   return (
     <input
+      disabled={props.disabled}
       className={` ${
         isNaN(props.value) || props.value < props.min || props.value > props.max
           ? "border-[red]"
